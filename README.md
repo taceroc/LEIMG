@@ -52,23 +52,23 @@ Example `runs.yml`:
 
 ```yaml
 run_001:
-  dt0: 100
+  dt0: 0
   d: 1000
   dz0: 0.02
   ct: 100
   plane_coefficients: [1, 0, 1, 1]
-  angles: [-180, 180]
+  angles: [0, 360]
   wave: 0.7499
   dust_env: "mw"
   composition: "both"
 
 run_002:
-  dt0: 120
+  dt0: 0
   d: 1200
   dz0: 0.03
   ct: 110
   plane_coefficients: [1, 0, 1, 1.2]
-  angles: [-180, 180]
+  angles: [25, 290]
   wave: 0.7499
   dust_env: "lmc"
   composition: "S"
@@ -76,15 +76,15 @@ run_002:
 
 Required keys per run:
 
-- `dt0`
-- `d`
-- `dz0`
-- `ct`
-- `plane_coefficients` (must be 4 values)
-- `angles` (must be 2 values)
-- `wave`
+- `dt0`: ignore
+- `d`: distance source-observer in pc.
+- `dz0`: Thickness of the dust sheet in pc.
+- `ct`: time of LE detection after peak in days.
+- `plane_coefficients` (must be 4 values): Defines the equation of the plane sheet in pc.
+- `angles` (must be 2 values): Defines the initial and final angle of the visible light echo. A full LE would be the total ring from 0$^\circ$ to 360$^\circ$, an arc of LE can be anything, e.g., 30$^\circ$ to 120$^\circ$. Only the first value can be negative, e.g., -30$^\circ$ to 300$^\circ$.
+- `wave`: Wavelength of LE observation in micrometers.
 - `dust_env` (`mw` or `lmc`)
-- `composition` (`both`, `S`, or `C`)
+- `composition` (`both`, `S`, or `C`): Defines if the optical properties of the dust medium would include contributions from carbonaceous dust or silicate dust or both, as defined in Weingartner & Draine (2001, ApJ, 548, 296). The options for this parameter are: `C', S', or `both'.
 
 ## Outputs
 
