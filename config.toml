@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 
 [project]
-name = "LE_pkg"
+name = "LEIMG"
 dynamic = ["version"]
 description = "A python package that simulate Light Echo images"
 requires-python = ">=3.10"
