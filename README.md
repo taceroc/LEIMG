@@ -51,7 +51,7 @@ The YAML file must be a mapping of run IDs to parameter dictionaries.
 Example `runs.yml`:
 
 ```yaml
-run_001:
+0:
   dt0: 0
   d: 1000
   dz0: 0.02
@@ -62,7 +62,7 @@ run_001:
   dust_env: "mw"
   composition: "both"
 
-run_002:
+1:
   dt0: 0
   d: 1200
   dz0: 0.03
