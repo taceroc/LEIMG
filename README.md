@@ -70,14 +70,14 @@ Example `runs.yml`:
   pixel_resolution: 1
 
 1: 
-  d: 1200
+  d: 12000
   dz0: 0.03
   ct: 110
   plane_coefficients:
   - 1
   - 0
   - 1
-  - 1.2
+  - 10
   angles:
   - 25
   - -45
