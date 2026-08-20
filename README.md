@@ -59,10 +59,11 @@ Example `runs.yml`:
   plane_coefficients: [1, 0, 1, 1]
   angles: [0, 360]
   wave: 0.7499
-  dust_env: "mw"
-  composition: "both"
+  dust_env: mw
+  composition: both
+  path_csv_lc: data/lightcurves/your_fav_sn_lc.csv
 
-1:
+1: #run_id
   dt0: 0
   d: 1200
   dz0: 0.03
@@ -70,21 +71,23 @@ Example `runs.yml`:
   plane_coefficients: [1, 0, 1, 1.2]
   angles: [25, 290]
   wave: 0.7499
-  dust_env: "lmc"
-  composition: "S"
+  dust_env: lmc
+  composition: S
+  path_csv_lc: data/lightcurves/your_fav_sn_lc.csv
 ```
 
 Required keys per run:
-
+- run_id: be careful to not have duplicated ids
 - `dt0`: ignore
 - `d`: distance source-observer in pc.
 - `dz0`: Thickness of the dust sheet in pc.
 - `ct`: time of LE detection after peak in days.
 - `plane_coefficients` (must be 4 values): Defines the equation of the plane sheet in pc.
-- `angles` (must be 2 values): Defines the initial and final angle of the visible light echo. A full LE would be the total ring from 0° to 360°, an arc of LE can be anything, e.g., 30° to 120°. Only the first value can be negative, e.g., -30 ° to 300°.
+- `angles` (must be 2 values): Defines the initial and final angle of the visible light echo. A full LE would be the total ring from 0° to 360°, an arc of LE can be anything, e.g., 30° to 120°. Only the last (end angle) value can be negative, e.g., (45 ° to -30°).
 - `wave`: Wavelength of LE observation in micrometers.
 - `dust_env` (`mw` or `lmc`): dust type/origin given by Weingartner & Draine (2001, ApJ, 548, 296).
 - `composition` (`both`, `S`, or `C`): Defines if the optical properties of the dust medium would include contributions from carbonaceous dust or silicate dust or both, as defined in Weingartner & Draine (2001, ApJ, 548, 296). The options for this parameter are: `C', S', or `both'.
+- `path_csv_lc`: csv path with the discrete light curve. Must have two columns = 'mag' and 'time', time must be in days.
 
 ## Outputs
 
@@ -93,10 +96,29 @@ For each run ID, files are written under:
 ```text
 <outdir>/<run_id>/
 ```
+```
+runs_date
+├── run_id
+│   ├── arrays
+│   │   ├── surface_values.npy
+│   │   ├── surface.npy
+│   │   ├── x_ly.npy
+│   │   ├── ximg_arcsec.npy
+│   │   ├── y_ly.npy
+│   │   ├── yimg_arcsec.npy
+│   │   ├── z_ly.npy
+│   │   └── zimgly.npy
+│   ├── figures
+│   │   └── surface.png
+│   ├── fits
+│   │   └── surface_image.fits
+│   └── run_params.yml
+```
 
 And a combined manifest is written to:
 
 ```text
 <outdir>/manifest.yml
 ```
+both `run_params.yml` and `manifest.yml` return the parameters given in the `runs.yml` file but in the units used for the simulation: `pc -> ly`, `day -> years`.
 

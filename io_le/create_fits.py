@@ -11,6 +11,7 @@ def main(surface_values, ximg_arcsec, yimg_arcsec, outdir):
     
     sv_ct_no0 = surface_values
     sv_ct_no0 = sv_ct_no0*(sv_ct_no0>0)
+    sv_ct_no0 = np.nan_to_num(sv_ct_no0, nan=0.0, posinf=0.0, neginf=0.0)
 
     w = wcs.WCS(naxis=2)
     

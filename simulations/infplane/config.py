@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import pandas as pd
 from typing import List, Literal
 DustEnv = Literal["mw", "lmc"]
 Composition = Literal["both", "S", "C"]
@@ -6,7 +7,7 @@ from utils import fix_constants as fc
 
 @dataclass
 class InfPlaneConfig:
-    dt0_years: float
+    # dt0_years: float
     so_d_ly: float
     dz0_ly: float
     ct_years: float
@@ -16,16 +17,18 @@ class InfPlaneConfig:
     z0ly: float     # [a, ay, az, z0_pc]
     angles_deg: List[float]             # [ini, end]
     wavel: float
+    path_csv_lc: str
     dust_env: DustEnv
     composition_s_c: Composition = "both"
+    
     # extra_name: str = ""
     # loc_to_fits_subdir: str = ""
 
     @classmethod
     def from_yaml_entry(cls, parameters: dict) -> "InfPlaneConfig":
 
-        required = ["dt0", "d", "dz0", "ct", "plane_coefficients", 
-                    "angles", "wave", "dust_env"]
+        required = ["d", "dz0", "ct", "plane_coefficients", 
+                    "angles", "wave", "dust_env", "path_csv_lc"]
         missing = [k for k in required if k not in parameters]
         if missing:
             raise ValueError(f"Missing required keys: {missing}")
@@ -42,7 +45,7 @@ class InfPlaneConfig:
         end_angle = parameters['angles'][1]
 
         cfg = cls(
-        dt0_years = parameters['dt0'] * fc.dtoy, #years
+        # dt0_years = parameters['dt0'] * fc.dtoy, #years
         so_d_ly = parameters['d'] * fc.pctoly,#parameters['d']
         dz0_ly = parameters['dz0'] * fc.pctoly,
         ct_years = parameters['ct'] * fc.dtoy,#in y
@@ -54,6 +57,7 @@ class InfPlaneConfig:
         wavel = parameters['wave'], 
         dust_env = parameters['dust_env'],
         composition_s_c= parameters['composition'],
+        path_csv_lc=parameters['path_csv_lc']
         )
         # self.bool_save = args[0]
         # self.bool_show_plots = args[1]
@@ -72,3 +76,13 @@ class InfPlaneConfig:
             raise ValueError("dust_env must be 'mw' or 'lmc'")
         if self.composition_s_c not in ("both", "S", "C"):
             raise ValueError("composition must be 'both', 'S', or 'C'")
+        lc_load = pd.read_csv(self.path_csv_lc).columns
+        if lc_load[0] != 'mag' or lc_load[1] != 'time':
+            raise ValueError("format of the csv with light curve must be two columns = ['mag, 'time'], time must be in days")
+        if self.angles_deg[0] < 0:
+            raise ValueError("only end angle can be negative, initial angle must be positive")
+        if self.angles_deg[0] > 360 or self.angles_deg[1] > 360:
+            raise ValueError("angle must be between 0 and 360 degrees")
+
+
+            

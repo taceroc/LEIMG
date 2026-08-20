@@ -27,7 +27,6 @@ class LE:
         self.z_inter_values = 0
         self.x_projected = 0
         self.y_projected = 0
-        self.dt0 = source.dt0
         self.d = source.d   
         self.theta = [0, 2*np.pi]
         

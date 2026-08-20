@@ -72,8 +72,8 @@ class InfPlaneSimulator(BaseSimulation):
 
 
     def _build_state(self, config):
-        lc = self._load_lightcurve(file_path="data/lightcurves/LC_sn2011fe.csv")
-        source = Source(config.dt0_years, config.so_d_ly, Flmax=0)
+        lc = self._load_lightcurve(file_path=config.path_csv_lc)#"data/lightcurves/LC_sn2011fe.csv")
+        source = Source(config.so_d_ly)
         plane = InfPlane([config.a, config.ay, config.az, -config.z0ly], config.dz0_ly)
  
         return InfPlaneState(cfg=config, lc=lc, source=source, plane=plane, 
@@ -81,7 +81,7 @@ class InfPlaneSimulator(BaseSimulation):
                             x_bins=np.array([]), y_bins=np.array([]), ranges=[], act_all=[], bct_all=[], z_all_ly=np.array([]), surface_known=[])
         
     def _load_lightcurve(self, file_path):
-        file_path = '/pscratch/sd/t/taceroc/LE_experiments/LE_pkg/data/lightcurves/LC_sn2011fe.csv'
+        #file_path = '/pscratch/sd/t/taceroc/LE_experiments/LE_pkg/data/lightcurves/LC_sn2011fe.csv'
         lc_sn2011fe = extract_lc.read_from_file(file_path)
         lc = {}
         lc['mag'] = lc_sn2011fe['mag'].values - 5
