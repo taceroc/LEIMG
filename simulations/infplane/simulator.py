@@ -195,31 +195,35 @@ class InfPlaneSimulator(BaseSimulation):
 
     def _calculate_phases_geometry(self, tt_years):
         x_inter_values, y_inter_values, z_inter_values, new_xs, new_ys, new_zs, LE_plane1source1_tt = self._calculate_xyz_phase_lc_time(tt_years, return_LE_plane1source1=True)
-        bool_mask_sizes = ((x_inter_values <= self.state.ranges[0][0]) & (x_inter_values >= self.state.ranges[0][1]))
-        x_inter_values = x_inter_values[bool_mask_sizes]
-        y_inter_values = y_inter_values[bool_mask_sizes]
-        size_common_all = np.min([len(x_inter_values), len(y_inter_values)])
-        x_inter_values = x_inter_values[:size_common_all]
-        y_inter_values = y_inter_values[:size_common_all]
-        z_inter_values = LE_plane1source1_tt.func_for_z_plane(x_inter_values, y_inter_values)
-        bool_mask_sizes = ((LE_plane1source1_tt.x_projected[:,0].flatten() <= self.state.ranges[2][0]) & (LE_plane1source1_tt.x_projected[:,0].flatten() >= self.state.ranges[2][1]))
-        x_project_0 = LE_plane1source1_tt.x_projected[:,0, bool_mask_sizes].flatten()
-        x_project_1 = LE_plane1source1_tt.x_projected[:,1, bool_mask_sizes].flatten()
-        size_common = np.min([x_project_0.shape[-1], x_project_1.shape[-1]])
-        
-        LE_plane1source1_tt.x_projected = np.concatenate([x_project_0[:size_common], x_project_1[:size_common]]).reshape(1,2,size_common)
-        
-        y_project_0 = LE_plane1source1_tt.y_projected[:,0, bool_mask_sizes].flatten()
-        y_project_1 = LE_plane1source1_tt.y_projected[:,1, bool_mask_sizes].flatten()
-        size_common = np.min([y_project_0.shape[-1], y_project_1.shape[-1]])
-        LE_plane1source1_tt.y_projected = np.concatenate([y_project_0[:size_common], y_project_1[:size_common]]).reshape(1,2,size_common)
-
-        size_common = np.min([LE_plane1source1_tt.y_projected.shape[-1], LE_plane1source1_tt.x_projected.shape[-1]])
-        LE_plane1source1_tt.x_projected = LE_plane1source1_tt.x_projected[:,:,:size_common_all]
-        LE_plane1source1_tt.y_projected = LE_plane1source1_tt.y_projected[:,:,:size_common_all]
-        LE_plane1source1_tt.z_projected = LE_plane1source1_tt.func_for_z(LE_plane1source1_tt.x_projected, LE_plane1source1_tt.y_projected)
-
-        return x_inter_values, y_inter_values, z_inter_values, LE_plane1source1_tt
+        try:
+            if x_inter_values == None:
+                return None, None, None, None
+        except:
+            bool_mask_sizes = ((x_inter_values <= self.state.ranges[0][0]) & (x_inter_values >= self.state.ranges[0][1]))
+            x_inter_values = x_inter_values[bool_mask_sizes]
+            y_inter_values = y_inter_values[bool_mask_sizes]
+            size_common_all = np.min([len(x_inter_values), len(y_inter_values)])
+            x_inter_values = x_inter_values[:size_common_all]
+            y_inter_values = y_inter_values[:size_common_all]
+            z_inter_values = LE_plane1source1_tt.func_for_z_plane(x_inter_values, y_inter_values)
+            bool_mask_sizes = ((LE_plane1source1_tt.x_projected[:,0].flatten() <= self.state.ranges[2][0]) & (LE_plane1source1_tt.x_projected[:,0].flatten() >= self.state.ranges[2][1]))
+            x_project_0 = LE_plane1source1_tt.x_projected[:,0, bool_mask_sizes].flatten()
+            x_project_1 = LE_plane1source1_tt.x_projected[:,1, bool_mask_sizes].flatten()
+            size_common = np.min([x_project_0.shape[-1], x_project_1.shape[-1]])
+            
+            LE_plane1source1_tt.x_projected = np.concatenate([x_project_0[:size_common], x_project_1[:size_common]]).reshape(1,2,size_common)
+            
+            y_project_0 = LE_plane1source1_tt.y_projected[:,0, bool_mask_sizes].flatten()
+            y_project_1 = LE_plane1source1_tt.y_projected[:,1, bool_mask_sizes].flatten()
+            size_common = np.min([y_project_0.shape[-1], y_project_1.shape[-1]])
+            LE_plane1source1_tt.y_projected = np.concatenate([y_project_0[:size_common], y_project_1[:size_common]]).reshape(1,2,size_common)
+    
+            size_common = np.min([LE_plane1source1_tt.y_projected.shape[-1], LE_plane1source1_tt.x_projected.shape[-1]])
+            LE_plane1source1_tt.x_projected = LE_plane1source1_tt.x_projected[:,:,:size_common_all]
+            LE_plane1source1_tt.y_projected = LE_plane1source1_tt.y_projected[:,:,:size_common_all]
+            LE_plane1source1_tt.z_projected = LE_plane1source1_tt.func_for_z(LE_plane1source1_tt.x_projected, LE_plane1source1_tt.y_projected)
+    
+            return x_inter_values, y_inter_values, z_inter_values, LE_plane1source1_tt
 
     def calculate_le_2d(self, LE_plane1source1_tt, surface):
         """
@@ -294,7 +298,7 @@ class InfPlaneSimulator(BaseSimulation):
             
         # calculate x,y,z values of LE equation
         x_inter_values, y_inter_values, z_inter_values, new_xs, new_ys, new_zs = LE_plane1source1_tt.run()
-        
+            
 
         if return_LE_plane1source1:
             return x_inter_values, y_inter_values, z_inter_values, new_xs, new_ys, new_zs, LE_plane1source1_tt

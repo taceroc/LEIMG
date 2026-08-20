@@ -219,7 +219,7 @@ def bin_data_xyz(x,y,z):
 def find_mask_angles(ini_angle, end_angle, surface_val, x_img, y_img):
 
     def find_quadrant(angle):
-        div = angle//90
+        div = (angle+360)//90
         if div == 0:
             return 1
         elif div == 1:
