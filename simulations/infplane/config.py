@@ -18,6 +18,7 @@ class InfPlaneConfig:
     angles_deg: List[float]             # [ini, end]
     wavel: float
     path_csv_lc: str
+    pixel_resolution: float
     dust_env: DustEnv
     composition_s_c: Composition = "both"
     
@@ -28,7 +29,7 @@ class InfPlaneConfig:
     def from_yaml_entry(cls, parameters: dict) -> "InfPlaneConfig":
 
         required = ["d", "dz0", "ct", "plane_coefficients", 
-                    "angles", "wave", "dust_env", "path_csv_lc"]
+                    "angles", "wave", "dust_env", "path_csv_lc", "pixel_resolution"]
         missing = [k for k in required if k not in parameters]
         if missing:
             raise ValueError(f"Missing required keys: {missing}")
@@ -57,7 +58,8 @@ class InfPlaneConfig:
         wavel = parameters['wave'], 
         dust_env = parameters['dust_env'],
         composition_s_c= parameters['composition'],
-        path_csv_lc=parameters['path_csv_lc']
+        path_csv_lc=parameters['path_csv_lc'],
+        pixel_resolution = parameters['pixel_resolution']
         )
         # self.bool_save = args[0]
         # self.bool_show_plots = args[1]
@@ -83,6 +85,8 @@ class InfPlaneConfig:
             raise ValueError("only end angle can be negative, initial angle must be positive")
         if self.angles_deg[0] > 360 or self.angles_deg[1] > 360:
             raise ValueError("angle must be between 0 and 360 degrees")
+        if self.pixel_resolution <= 0:
+            raise ValueError("pixel resolution must be > 0")
 
 
             

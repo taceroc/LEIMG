@@ -33,7 +33,6 @@ class InfPlaneState:
     x_bins: np.array
     y_bins: np.array
     ranges: list
-    pixel_resolution: float
     act_all: list #center for phase 0
     bct_all: list
     z_all_ly: np.array #z for all
@@ -42,11 +41,11 @@ class InfPlaneState:
     # add anything phase ops need (constants, masks, cached objects)
 
 class InfPlaneSimulator(BaseSimulation):
-    def __init__(self, config: InfPlaneConfig, context: SimulationContext, pixel_resolution: float = 0.2):
+    def __init__(self, config: InfPlaneConfig, context: SimulationContext):
         self.not_use = 0
         self.config = config
         self.context = context
-        self.pixel_resolution = pixel_resolution
+        self.pixel_resolution = config.pixel_resolution
         self.too_big = False
         self.max_size_img = 3000
         self.min_size_img = 500
@@ -76,8 +75,7 @@ class InfPlaneSimulator(BaseSimulation):
         source = Source(config.so_d_ly)
         plane = InfPlane([config.a, config.ay, config.az, -config.z0ly], config.dz0_ly)
  
-        return InfPlaneState(cfg=config, lc=lc, source=source, plane=plane, 
-                             pixel_resolution=self.pixel_resolution, too_big=self.too_big,
+        return InfPlaneState(cfg=config, lc=lc, source=source, plane=plane, too_big=self.too_big,
                             x_bins=np.array([]), y_bins=np.array([]), ranges=[], act_all=[], bct_all=[], z_all_ly=np.array([]), surface_known=[])
         
     def _load_lightcurve(self, file_path):

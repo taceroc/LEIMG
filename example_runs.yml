@@ -1,0 +1,35 @@
+0:
+  angles:
+  - 45
+  - -30
+  composition: both
+  ct: 250
+  d: 19666
+  dust_env: mw
+  dz0: 0.11
+  plane_coefficients:
+  - 0.136
+  - -0.039
+  - 1
+  - 59.091
+  wave: 0.656
+  path_csv_lc: LEIMG/data/lightcurves/LC_sn2011fe.csv
+  pixel_resolution: 0.2
+
+1:
+  angles:
+  - 0
+  - -90
+  composition: both
+  ct: 250
+  d: 19666
+  dust_env: mw
+  dz0: 0.11
+  plane_coefficients:
+  - 0
+  - 0
+  - 1
+  - 59.091
+  wave: 0.656
+  path_csv_lc: LEIMG/data/lightcurves/LC_sn2011fe.csv
+  pixel_resolution: 1
