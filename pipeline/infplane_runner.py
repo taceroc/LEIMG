@@ -23,5 +23,5 @@ def run_infplane_entry(cfg: InfPlaneConfig, run_id: int, output_root: Path, save
 
     # optional immediate FITS write from in-memory arrays
     write_fits.main(result.surface_image, 
-                    result.x_img_arc, result.y_img_arc, f'{output_root}/{run_id}')
+                    result.x_img_arc, result.y_img_arc, f'{output_root}/{run_id}', cfg.pixel_resolution)
     return {"run_id": run_id, "outputs": outputs, "meta": result.metadata}

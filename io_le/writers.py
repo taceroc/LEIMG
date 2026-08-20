@@ -48,7 +48,7 @@ class ResultWriter:
         mags = np.nan_to_num(mags, nan=0.0, posinf=0.0, neginf=None)
         fig, ax = plt.subplots(1,1, figsize = (8,8))
         aja = ax.imshow(mags, origin = "lower", cmap="RdPu")
-        plt.colorbar(aja)
+        cbar = plt.colorbar(aja)
         ax.set_title(f'surface image at {cfg.ct_years} years')
         plt.savefig(os.path.join(self.outdir, 'figures/surface.png'), dpi=100)
         plt.close()

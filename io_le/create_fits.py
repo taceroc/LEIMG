@@ -5,12 +5,13 @@ import yaml
 import numpy as np
 
 
-def main(surface_values, ximg_arcsec, yimg_arcsec, outdir):
+def main(surface_values, ximg_arcsec, yimg_arcsec, outdir, pixel_resolution):
     x = ximg_arcsec
     y = yimg_arcsec
     
     sv_ct_no0 = surface_values
     sv_ct_no0 = sv_ct_no0*(sv_ct_no0>0)
+    sv_ct_no0 = np.nan_to_num(sv_ct_no0, nan=0.0, posinf=0.0, neginf=0.0)
 
     w = wcs.WCS(naxis=2)
     
@@ -21,7 +22,7 @@ def main(surface_values, ximg_arcsec, yimg_arcsec, outdir):
     w.wcs.crval = [x.min()+np.abs(x.max() - x.min())/2, y.min()+np.abs(y.max() - y.min())/2]
 
     # what is the pixel scale in lon, lat.
-    w.wcs.cdelt = np.array([0.2, 0.2])
+    w.wcs.cdelt = np.array([pixel_resolution, pixel_resolution])
 
     # write the HDU object WITH THE HEADER
     header = w.to_header()

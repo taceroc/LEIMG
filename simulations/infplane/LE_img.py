@@ -32,7 +32,7 @@ class LEImage:
         
         x_size_img = int(x_tot_arcsec / self.pixel)
         y_size_img = int(y_tot_arcsec / self.pixel)
-        logger.info("size img pixels %s", (x_size_img, y_size_img))
+        logger.info("size img pixels %s", (x_size_img, y_size_img, self.pixel))
 
         return x_size_img, y_size_img
     

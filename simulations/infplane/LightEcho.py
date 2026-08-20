@@ -27,7 +27,6 @@ class LE:
         self.z_inter_values = 0
         self.x_projected = 0
         self.y_projected = 0
-        self.dt0 = source.dt0
         self.d = source.d   
         self.theta = [0, 2*np.pi]
         
@@ -49,7 +48,9 @@ class LE:
             Calculate the rho in the sky plane (xy) and thickness according to Sugermann 2003 and Xi 1994
             and calculate the radius out and radius min according to that thickness
         """
+
         r_le = np.sqrt(self.r_le2)
+    
         rhos = np.sqrt(2 * self.z_inter_values * self.ct + (self.ct)**2 )
         half_obs_thickness = np.sqrt( (self.ct / rhos) ** 2 * self.dz0 ** 2 ) / 2 #+ ( (rhos * fc.c / (2 * self.ct)) + ( fc.c * self.ct / (2 * rhos) )) ** 2 * self.dt0  ** 2 ) / 2
         
@@ -98,6 +99,9 @@ class LE:
         """
             Return x,y,z intersection in ly and x,y projected in the sky plane in arcseconds
         """
+        self.calculate_rle2()
+        if self.r_le2 <= 0 :
+            return None, None, None, None, None, None
         self.x_inter_values, self.y_inter_values, self.z_inter_values = self.get_intersection_xyz()
         # logger.info(f"There are %s intersections points in x", self.x_inter_values.shape)
         # logger.info(f"There are %s intersections points in y", self.y_inter_values.shape)
@@ -172,17 +176,26 @@ class LEPlane(LE):
         """
             Calculate the intersection points x,y,z between a DustShape and the paraboloid
         """
-        self.calculate_rle2()
+        
         theta_p = np.linspace(self.theta[0], self.theta[1], 1000)
         logger.info('Angle to create intersection')
         logger.info(f'{self.theta[0]}, {self.theta[1]}')
      
-        
-        self.x_inter_values = np.sqrt(self.r_le2) * np.cos(theta_p) - (self.A/self.F)*self.ct
-        self.y_inter_values = np.sqrt(self.r_le2) * np.sin(theta_p) - (self.B/self.F)*self.ct
-        # calculate z = z0 - ax >> plane equation
-        self.z_inter_values = self.func_for_z_plane(self.x_inter_values, self.y_inter_values) #-(self.D/self.F) - (self.A/self.F) * self.x_inter_values - (self.B/self.F) * self.y_inter_values
-        
+
+        try:
+            self.x_inter_values = np.sqrt(self.r_le2) * np.cos(theta_p) - (self.A/self.F)*self.ct
+            self.y_inter_values = np.sqrt(self.r_le2) * np.sin(theta_p) - (self.B/self.F)*self.ct
+            # calculate z = z0 - ax >> plane equation
+            self.z_inter_values = self.func_for_z_plane(self.x_inter_values, self.y_inter_values) #-(self.D/self.F) - (self.A/self.F) * self.x_inter_values - (self.B/self.F) * self.y_inter_values
+            
+            
+        except Exception as e:
+            logger.warning(f"{e}")
+            self.x_inter_values = None
+            self.y_inter_values = None
+            self.z_inter_values = None
+            
+
         return self.x_inter_values, self.y_inter_values, self.z_inter_values
     
     def func_for_z_plane(self, val_x=0, val_y=0):

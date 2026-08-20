@@ -27,8 +27,8 @@ class SurfaceBrightness:
             Return units [mass / (time^2 lenght^3)] >> [flux / lenght^3]
         """
         self.wavel = wavel
-        self.Fl = source.Flmax
-        self.dt0 = source.dt0
+        # self.Fl = source.Flmax
+        self.dt0 = 0
         self.d = source.d
         self.ct = LE.ct
         self.dz0 = LE.dz0
@@ -55,30 +55,30 @@ class SurfaceBrightness:
                 # band = bandpasses[1]
                 self.band_pass_index = ixi
 
-
-    def rhos_half(self):
-        """
-            Calculate the thickness of the visible light echo, the rho coordiante, Sugermann 2003. Eq 11
-            Convolution of the thickness due to dust thickness and duration of pulse from source
-            Arguments:
-                Values of z: intersection paraboloid+dust
+    # THIS IS NO LONGER IN USE BECAUSE THICKNESS IS OBTAIN BY CALCULATING THE LE SOLUTION AT EACH POINT OF THE LC
+    # def rhos_half(self):
+    #     """
+    #         Calculate the thickness of the visible light echo, the rho coordiante, Sugermann 2003. Eq 11
+    #         Convolution of the thickness due to dust thickness and duration of pulse from source
+    #         Arguments:
+    #             Values of z: intersection paraboloid+dust
             
-            Return:
-                rhodrho: Sugermann 2003 Eq 7, rho = sqrt(x**2 + y**2)
-                rhos = sqrt(x**2 + y**2)
-                half_obs_thickness = thickness of LE
+    #         Return:
+    #             rhodrho: Sugermann 2003 Eq 7, rho = sqrt(x**2 + y**2)
+    #             rhos = sqrt(x**2 + y**2)
+    #             half_obs_thickness = thickness of LE
 
-        """
-        self.rhos = np.sqrt(2 * self.z_inter_values * self.ct + (self.ct) ** 2)
-        # self.rhos = np.sqrt(self.x_inter_values**2+self.y_inter_values**2+self.z_inter_values**2) * np.sin(np.deg2rad(35))
+    #     """
+    #     self.rhos = np.sqrt(2 * self.z_inter_values * self.ct + (self.ct) ** 2)
+    #     # self.rhos = np.sqrt(self.x_inter_values**2+self.y_inter_values**2+self.z_inter_values**2) * np.sin(np.deg2rad(35))
 
-        self.half_obs_thickness = (
-            np.sqrt((self.ct / self.rhos) ** 2 * self.dz0**2
-                + ((self.rhos * fc.c / (2 * self.ct)) + (fc.c * self.ct / (2 * self.rhos))) ** 2 * self.dt0**2)/ 2
-        )
-        # self.half_obs_thickness = np.sqrt( (self.ct / self.rhos) ** 2 * self.dz0 ** 2 )
-        self.rhodrho = self.rhos * self.half_obs_thickness
-        return self.rhodrho, self.rhos, self.half_obs_thickness
+    #     self.half_obs_thickness = (
+    #         np.sqrt((self.ct / self.rhos) ** 2 * self.dz0**2
+    #             + ((self.rhos * fc.c / (2 * self.ct)) + (fc.c * self.ct / (2 * self.rhos))) ** 2 * self.dt0**2)/ 2
+    #     )
+    #     #self.half_obs_thickness = np.sqrt( (self.ct / self.rhos) ** 2 * self.dz0 ** 2 )
+    #     self.rhodrho = self.rhos * self.half_obs_thickness
+    #     return self.rhodrho, self.rhos, self.half_obs_thickness
     
     def light_curve_integral(self, tilde=0):
         """
@@ -121,9 +121,7 @@ class SurfaceBrightness:
     def determine_flux_time_loop(self, tilde=0):
         self.Ir = 0 #np.ones(len(r))
         if self.lc.shape[0] == None:
-            # self.rhos_half()
-            Fl = self.Fl #* (fc.ytos**3)  # kg,ly,y
-            self.Ir = self.Ir * Fl * fc.n_H * fc.c#*1.25 * 0.5 * self.dt0  #* fc.c
+            raise ValueError("LC does not have information")
         else:
             self.light_curve_integral(tilde)
             Fl = np.array(self.Fl) #* (fc.ytos**2)  # kg,ly,y
@@ -165,9 +163,9 @@ class SurfaceBrightnessAnalytical(SurfaceBrightness):
         
 
         self.sb_true_matrix = np.zeros(len(r))
-        rhodrho, rhos, half_obs_thickness = super().rhos_half()
-        logger.info('mean of rho %s', np.mean(rhos))
-        logger.info('half_obs_thickness given by dust %s', np.mean(half_obs_thickness))
+        # rhodrho, rhos, half_obs_thickness = super().rhos_half()
+        # logger.info('mean of rho %s', np.mean(rhos))
+        # logger.info('half_obs_thickness given by dust %s', np.mean(half_obs_thickness))
   
         # dust-observer
         ll = np.sqrt(

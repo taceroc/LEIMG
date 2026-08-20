@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-import alphashape
+# import alphashape
 from scipy import interpolate
-from numba import jit, prange
+# from numba import jit, prange
 
 
 ##utilities.py
@@ -115,53 +115,53 @@ def interpolation_surface(new_xs, new_ys, surface_original):
     # surface_inter_y = interpolate.NearestNDInterpolator(list(zip(new_xs, new_ys)), surface_original)
     return surface_inter_y
 
-@jit(nopython=True)
-def cal_inter(x_p, y_p, z_p, h, k, l, ct, r0ly, dt0):
-    intersection_points = []
-    for i in range(len(x_p)):
-        for j in range(len(y_p)):
-            x_par, y_par, z_par = x_p[i,j], y_p[i,j], z_p[i,j]
+# @jit(nopython=True)
+# def cal_inter(x_p, y_p, z_p, h, k, l, ct, r0ly, dt0):
+#     intersection_points = []
+#     for i in range(len(x_p)):
+#         for j in range(len(y_p)):
+#             x_par, y_par, z_par = x_p[i,j], y_p[i,j], z_p[i,j]
 
-            # Check if the point is inside both the sphere and the paraboloid
-            sphere_condition = (r0ly - 0.05)**2 <= ((x_par - h)**2 + (y_par - k)**2 + (z_par - l)**2) <= (r0ly + 0.05)**2
-            paraboloid_condition = ((ct - dt0 )**2 + 2 * (ct - dt0) * z_par) <= (x_par**2 + y_par**2) <= (ct**2 + 2 * ct * z_par)
+#             # Check if the point is inside both the sphere and the paraboloid
+#             sphere_condition = (r0ly - 0.05)**2 <= ((x_par - h)**2 + (y_par - k)**2 + (z_par - l)**2) <= (r0ly + 0.05)**2
+#             paraboloid_condition = ((ct - dt0 )**2 + 2 * (ct - dt0) * z_par) <= (x_par**2 + y_par**2) <= (ct**2 + 2 * ct * z_par)
 
-            if (sphere_condition and paraboloid_condition):
-                intersection_points.append((x_par, y_par, z_par))
-    return intersection_points
-
-
-@jit(nopython=True)
-def cal_inter_cube(x_p, y_p, z_p, x_min, x_max, y_min, y_max, z_min, z_max, ct, dt0):
-    intersection_points = []
-    for i in range(len(x_p)):
-        for j in range(len(y_p)):
-            x_par, y_par, z_par = x_p[i,j], y_p[i,j], z_p[i,j]
-
-            # Check if the point is inside both the sphere and the paraboloid
-            cube_condition = (x_min<=x_par<=x_max) and (y_min<=y_par<=y_max) and (z_min<=z_par<=z_max)
-            paraboloid_condition =  ((ct - dt0 )**2 + 2 * (ct - dt0) * z_par) <= (x_par**2 + y_par**2) <= (ct**2 + 2 * ct * z_par)
-
-            if (cube_condition and paraboloid_condition):
-                intersection_points.append((x_par, y_par, z_par))
-    return intersection_points
+#             if (sphere_condition and paraboloid_condition):
+#                 intersection_points.append((x_par, y_par, z_par))
+#     return intersection_points
 
 
-@jit(nopython=True)
-def cal_inter_sheetdust(x_all, y_all, z_all, r_in, r_out, act, bct, x_min, x_max, y_min, y_max, z_min, z_max, params):
-    x_all_inside = []
-    y_all_inside = []
-    z_all_inside = []
-    # print(r_in.shape)
-    for i in range(x_all.shape[-1]):
-        for j in range(y_all.shape[-1]):
-            if (r_in[j,i] <= np.sqrt((x_all[j,i] + act)**2 + (y_all[j,i] + bct)**2) <= r_out[j,i]):
-                if (-1E-5 <= z_all[j,i] * params[2] + params[-1] + params[0]*x_all[j,i] + params[1]*y_all[j,i] <= 1E-5):
-                    if (x_min<=x_all[j,i]<=x_max) and (y_min<=y_all[j,i]<=y_max) and (z_min<=z_all[j,i]<=z_max):
-                        x_all_inside.append(x_all[j,i])
-                        y_all_inside.append(y_all[j,i])
-                        z_all_inside.append(z_all[j,i])
-    return x_all_inside, y_all_inside, z_all_inside
+# @jit(nopython=True)
+# def cal_inter_cube(x_p, y_p, z_p, x_min, x_max, y_min, y_max, z_min, z_max, ct, dt0):
+#     intersection_points = []
+#     for i in range(len(x_p)):
+#         for j in range(len(y_p)):
+#             x_par, y_par, z_par = x_p[i,j], y_p[i,j], z_p[i,j]
+
+#             # Check if the point is inside both the sphere and the paraboloid
+#             cube_condition = (x_min<=x_par<=x_max) and (y_min<=y_par<=y_max) and (z_min<=z_par<=z_max)
+#             paraboloid_condition =  ((ct - dt0 )**2 + 2 * (ct - dt0) * z_par) <= (x_par**2 + y_par**2) <= (ct**2 + 2 * ct * z_par)
+
+#             if (cube_condition and paraboloid_condition):
+#                 intersection_points.append((x_par, y_par, z_par))
+#     return intersection_points
+
+
+# @jit(nopython=True)
+# def cal_inter_sheetdust(x_all, y_all, z_all, r_in, r_out, act, bct, x_min, x_max, y_min, y_max, z_min, z_max, params):
+#     x_all_inside = []
+#     y_all_inside = []
+#     z_all_inside = []
+#     # print(r_in.shape)
+#     for i in range(x_all.shape[-1]):
+#         for j in range(y_all.shape[-1]):
+#             if (r_in[j,i] <= np.sqrt((x_all[j,i] + act)**2 + (y_all[j,i] + bct)**2) <= r_out[j,i]):
+#                 if (-1E-5 <= z_all[j,i] * params[2] + params[-1] + params[0]*x_all[j,i] + params[1]*y_all[j,i] <= 1E-5):
+#                     if (x_min<=x_all[j,i]<=x_max) and (y_min<=y_all[j,i]<=y_max) and (z_min<=z_all[j,i]<=z_max):
+#                         x_all_inside.append(x_all[j,i])
+#                         y_all_inside.append(y_all[j,i])
+#                         z_all_inside.append(z_all[j,i])
+#     return x_all_inside, y_all_inside, z_all_inside
 
 
 
@@ -219,7 +219,7 @@ def bin_data_xyz(x,y,z):
 def find_mask_angles(ini_angle, end_angle, surface_val, x_img, y_img):
 
     def find_quadrant(angle):
-        div = angle//90
+        div = (angle)//90
         if div == 0:
             return 1
         elif div == 1:
@@ -327,8 +327,7 @@ def find_mask_angles(ini_angle, end_angle, surface_val, x_img, y_img):
                     mask = mask + find_limits_quadrant(x_img, y_img, i, angle=[ini_angle,end_angle], last=False, first=False)
 
     mask[mask >= 1] = 1
-    if end_angle < 0:
-        mask = ~mask
+ 
 
     return mask
     
