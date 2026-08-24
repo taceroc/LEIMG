@@ -79,8 +79,16 @@ class LEImageAnalytical(LEImage):
     def __init__(self, LE_geometryanalyticalsource, geometry, surface, pixel_resolution = 0.2):
         super().__init__(LE_geometryanalyticalsource, surface, pixel_resolution)
         # inner an outer radii of LE
-        self.r_le_in = utils_multiple.convert_ly_to_arcsec(LE_geometryanalyticalsource.d, LE_geometryanalyticalsource.r_le_in)
-        self.r_le_out = utils_multiple.convert_ly_to_arcsec(LE_geometryanalyticalsource.d, LE_geometryanalyticalsource.r_le_out)
+        in_size_common = np.min([LE_geometryanalyticalsource.r_le_in.shape[-1],
+            LE_geometryanalyticalsource.z_projected[0,0,:].shape[-1]])
+
+        out_size_common = np.min([LE_geometryanalyticalsource.r_le_out.shape[-1],
+            LE_geometryanalyticalsource.z_projected[0,0,:].shape[-1]])
+
+        self.r_le_in = utils_multiple.convert_ly_to_arcsec((LE_geometryanalyticalsource.d)+LE_geometryanalyticalsource.z_projected[0,0,:in_size_common], LE_geometryanalyticalsource.r_le_in[:in_size_common])
+        self.r_le_out = utils_multiple.convert_ly_to_arcsec((LE_geometryanalyticalsource.d)+LE_geometryanalyticalsource.z_projected[0,0,:out_size_common], LE_geometryanalyticalsource.r_le_out[:out_size_common])
+        # self.r_le_in = utils_multiple.convert_ly_to_arcsec(LE_geometryanalyticalsource.d, LE_geometryanalyticalsource.r_le_in)
+        # self.r_le_out = utils_multiple.convert_ly_to_arcsec(LE_geometryanalyticalsource.d, LE_geometryanalyticalsource.r_le_out)
 
         self.geometry_to_use = geometry
         # act, bct: origin of LE in x and y
