@@ -116,13 +116,13 @@ class InfPlaneSimulator(BaseSimulation):
         x_inter_values, y_inter_values, z_inter_values, new_xs, new_ys, new_zs, LE_plane1source1_tt1 = self._calculate_xyz_phase_lc_time(self.state.lc.time_years[::40][0],
                                                                                                                                           return_LE_plane1source1=True)
 
-        if np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly > 1e-2:
-            logger.critical("Elliposoid -> Paraboloid approximation no longer true %s", 
-                           np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly)
-            return None #sys.exit(1)
-        else:
-            logger.info('approximation holds %s', np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly)            
-            logger.info('%s', (np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2])), self.state.cfg.so_d_ly))
+        # if np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly > 1e-5:
+        #     logger.critical("Elliposoid -> Paraboloid approximation no longer true %s", 
+        #                    np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly)
+        #     return None #sys.exit(1)
+        # else:
+        #     logger.info('approximation holds %s', np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2]))/self.state.cfg.so_d_ly)            
+        #     logger.info('%s', (np.mean(np.sqrt([x_inter_values**2 + y_inter_values**2])), self.state.cfg.so_d_ly))
             
 
             
@@ -238,7 +238,7 @@ class InfPlaneSimulator(BaseSimulation):
         ys_outer = le_img.new_ys[0, 0, :]
         xs_inner = le_img.new_xs[0, 1, :]
         ys_inner = le_img.new_ys[0, 1, :]
-
+    
         xs_all = np.concatenate([xs_outer, xs_inner])
         ys_all = np.concatenate([ys_outer, ys_inner])
 
