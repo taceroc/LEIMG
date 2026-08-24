@@ -90,7 +90,6 @@ Example `runs.yml`:
 
 Required keys per run:
 - run_id: be careful to not have duplicated ids
-- `dt0`: ignore
 - `d`: distance source-observer in pc.
 - `dz0`: Thickness of the dust sheet in pc.
 - `ct`: time of LE detection after peak in days.
@@ -135,3 +134,20 @@ And a combined manifest is written to:
 ```
 both `run_params.yml` and `manifest.yml` return the parameters given in the `runs.yml` file but in the units used for the simulation: `pc -> ly`, `day -> years`.
 
+
+# NEXT STEP: LE injection into DP1[1] images
+
+The output `.fits` files containing the LE simulations can be injected into realistic sky-images. I am going to be using DP1 images from the Rubin Observatory.
+
+The repository https://github.com/taceroc/LE_inj_dp1 contains the script to create the coadd images needed to simulate realistic conditions for LE detection onto astronomical images. LE are usually observed directly on difference images. 
+- The scripts in the repository creates two coadds using single visits images from DP1 data, 
+- injects LE simulation into the images, using the LSST Science Pipelines[2],
+- makes source detection on the last injected images, 
+- makes difference imaging, and
+- creates and saves the triples postages stamps (`science`, `template`, `difference`). The `difference` will contain the simualted observed LE.
+
+
+
+
+[1] NSF-DOE Vera C. Rubin Observatory (2025); Legacy Survey of Space and Time Data Preview 1, https://doi.org/10.71929/rubin/2570308
+[2] Rubin Observatory Science Pipelines Developers (2025); The LSST Science Pipelines Software: Optical Survey Pipeline Reduction and Analysis Environment, https://doi.org/10.71929/rubin/2570545
