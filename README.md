@@ -150,4 +150,5 @@ The repository https://github.com/taceroc/LE_inj_dp1 contains the script to crea
 
 
 [1] NSF-DOE Vera C. Rubin Observatory (2025); Legacy Survey of Space and Time Data Preview 1, https://doi.org/10.71929/rubin/2570308
+
 [2] Rubin Observatory Science Pipelines Developers (2025); The LSST Science Pipelines Software: Optical Survey Pipeline Reduction and Analysis Environment, https://doi.org/10.71929/rubin/2570545

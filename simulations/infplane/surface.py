@@ -32,14 +32,16 @@ class SurfaceAssembler:
         ]
         logger.info('griddata %s',(np.array(self.all_surface).shape, points.shape, grid_x.shape, grid_y.shape ))
 
-        # surface_known = np.concatenate([self.all_surface, self.all_surface])
+        surface_known = np.array(self.surface_known)
         if len(self.surface_known) == points.shape[0]:
-            values_for_grid = np.array(self.surface_known)
+            values_for_grid = surface_known
             logger.info('know')
             logger.info(f"{values_for_grid.min()}, {values_for_grid.max()}")
         else:
             logger.info('all')
-            values_for_grid = np.array(self.all_surface)
+            min_size = np.min([surface_known.shape[0], points.shape[0]])
+            values_for_grid = surface_known[:min_size]
+            points = points[:min_size]
             logger.info(f"{values_for_grid.min()}, {values_for_grid.max()}")
             
 
