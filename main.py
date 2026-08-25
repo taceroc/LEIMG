@@ -38,7 +38,7 @@ def main():
             manifest.append(rec)
         except Exception as e:
             print(f"An error occurred: {e}")
-            print(f"Error type: {type(e).__name__}"):
+            print(f"Error type: {type(e).__name__}")
             rec = {"run_id": run_id, "outputs": '', "meta": ''}
             manifest.append(rec)
 
